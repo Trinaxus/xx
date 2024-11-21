@@ -18,7 +18,7 @@ export const AccountBalance = () => {
 
   // Berechne den verfügbaren Betrag basierend auf bestätigten Transaktionen
   // Jetzt wird die Bilanz vom Basiskontostand abgezogen
-  const availableBalance = baseAccountBalance - monthBalance.balance;
+  const availableBalance = baseAccountBalance + monthBalance.balance;
 
   // Berechne den projizierten Betrag inklusive ausstehender Transaktionen
   const projectedBalance = availableBalance - monthBalance.pending;
