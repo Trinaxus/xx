@@ -21,7 +21,7 @@ export const AccountBalance = () => {
   const availableBalance = baseAccountBalance + monthBalance.balance;
 
   // Berechne den projizierten Betrag inklusive ausstehender Transaktionen
-  const projectedBalance = availableBalance - monthBalance.pending;
+  const projectedBalance = availableBalance + monthBalance.pending;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

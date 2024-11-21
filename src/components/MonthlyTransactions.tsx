@@ -21,8 +21,8 @@ export const MonthlyTransactions = () => {
   const currentMonth = () => currentDate.getMonth();
   
   const monthBalance = calculateMonthBalance(currentMonth(), currentYear());
-  const availableBalance = baseAccountBalance - monthBalance.balance;
-  const projectedBalance = availableBalance - monthBalance.pending;
+  const availableBalance = baseAccountBalance + monthBalance.balance;
+  const projectedBalance = availableBalance + monthBalance.pending;
 
   // Get unique months from transactions and sort them
   const availableMonths = React.useMemo(() => {
