@@ -36,11 +36,11 @@ Dieses Projekt ist eine umfassende Finanzübersichtsanwendung, die es Benutzern 
 
 1. Klone das Repository:
    ```bash
-   git clone https://github.com/dein-benutzername/finanzuebersicht.git
+   git clone [https://github.com/dein-benutzername/xx.git
    ```
 2. Wechsle in das Projektverzeichnis:
    ```bash
-   cd finanzuebersicht
+   cd xx
    ```
 3. Installiere die Abhängigkeiten:
    ```bash
