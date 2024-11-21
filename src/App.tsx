@@ -8,6 +8,7 @@ import { YearlyComparison } from './components/YearlyComparison';
 import { CategoryAnalysis } from './components/CategoryAnalysis';
 import { CSVImport } from './components/CSVImport';
 import { SavingsOverview } from './components/SavingsOverview';
+import { CreditCardOverview } from './components/CreditCardOverview';
 import { useStore } from './store';
 
 function App() {
@@ -46,6 +47,10 @@ function App() {
           
           <section id="savings">
             <SavingsOverview />
+          </section>
+
+          <section id="credit-card">
+            <CreditCardOverview />
           </section>
           
           <section id="import">
