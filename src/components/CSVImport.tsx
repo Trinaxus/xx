@@ -166,7 +166,9 @@ export const CSVImport = () => {
           CSV-Datei hier ablegen oder klicken zum Auswählen
         </p>
         <p className="text-center text-sm text-gray-500 mt-2">
-          Erforderliche Spaltenreihenfolge: Status;Datum;Beschreibung;Kategorie;Betrag;Typ;Zahlungsart;Wiederkehrend
+          Erforderliche Spaltenreihenfolge: Status;Datum;Beschreibung;
+          Kategorie;Betrag;Typ;
+          Zahlungsart;Wiederkehrend
         </p>
       </button>
 

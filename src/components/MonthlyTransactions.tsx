@@ -75,74 +75,19 @@ export const MonthlyTransactions = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
         <div className="flex items-center gap-2">
-          <Calendar className="w-6 h-6 text-purple-600" />
-          <h2 className="text-xl font-display">Monatsübersicht</h2>
+          <button className="text-white text-sm md:text-base">←</button>
+          <span className="text-white text-sm md:text-base">Monatsübersicht</span>
+          <button className="text-white text-sm md:text-base">→</button>
         </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigateMonth('prev')}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-
-            <div className="relative">
-              <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors min-w-[180px] justify-between"
-              >
-                <span className="font-display text-lg">
-                  {formatMonth(currentMonth(), currentYear())}
-                </span>
-                {isExpanded ? (
-                  <ChevronUp className="w-5 h-5" />
-                ) : (
-                  <ChevronDown className="w-5 h-5" />
-                )}
-              </button>
-
-              {isExpanded && (
-                <div className="absolute top-full left-0 mt-2 w-64 max-h-96 overflow-y-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
-                  {availableMonths.map(({ key, label, year, month }) => (
-                    <button
-                      key={key}
-                      onClick={() => {
-                        navigateToMonth(year, month);
-                        setIsExpanded(false);
-                      }}
-                      className={`w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                        year === currentYear() && month === currentMonth()
-                          ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600'
-                          : ''
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={() => navigateMonth('next')}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
-
-          <button
-            onClick={() => setShowForm(true)}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            <span>Neue Transaktion</span>
-          </button>
-        </div>
+        <button
+          onClick={() => setShowForm(true)}
+          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 text-sm md:text-base"
+        >
+          <Plus className="w-5 h-5" />
+          <span>Neue Transaktion</span>
+        </button>
       </div>
 
       {/* Monthly Summary */}

@@ -89,11 +89,11 @@ const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#6366f1'
               nameKey="name"
               cx="50%"
               cy="50%"
-              innerRadius="50%"
+              innerRadius="55%"
               outerRadius="75%"
-              paddingAngle={5}
+              paddingAngle={6}
               label={renderCustomizedLabel}
-              labelLine={false}
+              labelLine={true}
             >
               {categoryData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -109,15 +109,7 @@ const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#6366f1'
               }}
               itemStyle={{ color: props => props.payload.fill }}
             />
-            <Legend 
-              formatter={renderColorfulLegendText}
-              layout="vertical"
-              align="right"
-              verticalAlign="middle"
-              wrapperStyle={{
-                paddingLeft: '20px'
-              }}
-            />
+            
           </PieChart>
         </ResponsiveContainer>
       </div>
