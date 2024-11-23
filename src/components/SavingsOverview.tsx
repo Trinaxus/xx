@@ -75,7 +75,7 @@ export const SavingsOverview = () => {
               }}
             />
             <Area type="monotone" dataKey="savings" stroke="#34d399" fillOpacity={1} fill="url(#colorSavings)" strokeWidth={2} />
-            <Bar dataKey="monthlyDeposit" fill="#eab308" barSize={20} />
+            <Bar dataKey="monthlyDeposit" fill="rgba(234, 179, 8, 0.5)" barSize={10} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>

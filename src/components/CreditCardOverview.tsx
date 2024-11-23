@@ -67,7 +67,7 @@ export const CreditCardOverview = () => {
               }}
             />
             <Area type="monotone" dataKey="monthlySpending" stroke="#f87171" fillOpacity={1} fill="url(#colorSpending)" strokeWidth={2} />
-            <Bar dataKey="monthlySpending" fill="#eab308" barSize={20} />
+            <Bar dataKey="monthlySpending" fill="rgba(234, 179, 8, 0.5)" barSize={10} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
