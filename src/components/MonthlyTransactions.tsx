@@ -77,9 +77,9 @@ export const MonthlyTransactions = () => {
       {/* Header */}
       <div className="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
         <div className="flex items-center gap-2">
-          <button className="text-white text-sm md:text-base">←</button>
-          <span className="text-white text-sm md:text-base">Monatsübersicht</span>
-          <button className="text-white text-sm md:text-base">→</button>
+          <button onClick={() => navigateMonth('prev')} className="text-white text-[8px] md:text-base">←</button>
+          <h2 className="text-[12px] md:text-xl font-display">{formatMonth(currentDate.getMonth(), currentDate.getFullYear())}</h2>
+          <button onClick={() => navigateMonth('next')} className="text-white text-[8px] md:text-base">→</button>
         </div>
         <button
           onClick={() => setShowForm(true)}
