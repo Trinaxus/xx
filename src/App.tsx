@@ -21,7 +21,7 @@ function App() {
       <div className="relative bg-transparent text-gray-900 dark:text-gray-100 transition-colors">
         <Header />
         
-        <main className="container mx-auto px-4 py-8 space-y-8">
+        <main className="container mx-auto px-4 pt-28 pb-8 space-y-8">
           <section id="dashboard">
             <Dashboard />
           </section>

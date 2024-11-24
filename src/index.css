@@ -22,6 +22,23 @@
   .glass-effect {
     @apply backdrop-blur-lg bg-white/75 dark:bg-gray-900/75;
   }
+
+  .logo-glow {
+    filter: drop-shadow(0 0 15px rgba(191, 98, 245, 0.5));
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #ec4899 0%, #9333ea 50%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-shift 8s linear infinite;
+  }
+
+  .logo-icon {
+    background: linear-gradient(135deg, #ec4899 0%, #9333ea 50%, #3b82f6 100%);
+    animation: gradient-shift 8s linear infinite;
+  }
 }
 
 /* Dropdown animation */
@@ -38,4 +55,16 @@
 
 .animate-slideDown {
   animation: slideDown 0.2s ease-out forwards;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }

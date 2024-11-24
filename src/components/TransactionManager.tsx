@@ -1,18 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { Edit2, Trash2, Filter, Plus, Repeat, Calendar, Search, ChevronDown, ChevronUp, Clock, Download, Zap, FileText, Check, Minus, CheckCircle2, CheckCircle } from 'lucide-react';
+import { Edit2, Trash2, Filter, Plus, Repeat, Calendar, Search, ChevronDown, ChevronUp, Clock, Download, Zap, Check, Minus, CheckCircle2, CheckCircle } from 'lucide-react';
 import { useStore } from '../store';
 import { formatDate, formatMonth, isValidDate } from '../utils/dateUtils';
 import { TransactionForm } from './TransactionForm';
 import type { Transaction } from '../types';
 
 export const TransactionManager = () => {
-  const { 
-    transactions, 
-    deleteTransaction,
-    recurringTransactions,
-    toggleTransactionPending,
-    updateTransactions
-  } = useStore();
+  const transactions = useStore((state) => state.transactions);
+  const recurringTransactions = useStore((state) => state.recurringTransactions);
+  const deleteTransaction = useStore((state) => state.deleteTransaction);
+  const toggleTransactionPending = useStore((state) => state.toggleTransactionPending);
+  const updateTransactions = useStore((state) => state.updateTransactions);
   
   const [showForm, setShowForm] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
@@ -92,13 +90,7 @@ export const TransactionManager = () => {
 
   // Check if a transaction matches a recurring pattern
   const isRecurringTransaction = (transaction: Transaction) => {
-    return recurringTransactions.some(rt => 
-      rt.description === transaction.description &&
-      rt.amount === transaction.amount &&
-      rt.category === transaction.category &&
-      rt.type === transaction.type &&
-      rt.paymentMethod === transaction.paymentMethod
-    );
+    return transaction.isRecurring === true;
   };
 
   const handleSelectAllMonths = () => {
@@ -190,40 +182,40 @@ export const TransactionManager = () => {
           const totals = calculateMonthlyTotals(monthTransactions);
 
           return (
-            <div key={monthKey} className="rounded-2xl bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/10 overflow-hidden">
+            <div key={monthKey} className="rounded-2xl bg-gray-100/80 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-300/50 dark:border-gray-700/50 overflow-hidden">
               {/* Month Header */}
               <button
                 onClick={() => toggleMonth(monthKey)}
-                className="w-full px-4 md:px-6 py-3 md:py-4 flex items-center justify-between hover:bg-gray-50/10 dark:hover:bg-gray-700/30"
+                className="w-full px-4 md:px-6 py-3 md:py-4 flex items-center justify-between hover:bg-gray-200/50 dark:hover:bg-gray-700/30"
               >
                 <div className="flex items-center gap-2 md:gap-4">
                   {isExpanded ? (
-                    <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
+                    <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-gray-600 dark:text-gray-400" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
+                    <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-600 dark:text-gray-400" />
                   )}
-                  <span className="text-sm md:text-base font-display">{monthName}</span>
-                  <span className="text-xs md:text-sm text-gray-500">
+                  <span className="text-sm md:text-base font-display text-gray-900 dark:text-white">{monthName}</span>
+                  <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
                     ({monthTransactions.length} {monthTransactions.length === 1 ? 'Transaktion' : 'Transaktionen'})
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2 md:gap-4">
                   <div className="flex flex-col items-end">
-                    <span className="text-xs md:text-sm text-gray-500">Einnahmen</span>
-                    <span className="text-sm md:text-base font-display text-emerald-600">
+                    <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Einnahmen</span>
+                    <span className="text-sm md:text-base font-display text-emerald-700 dark:text-emerald-400">
                       {formatAmount({ amount: totals.income })}
                     </span>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-xs md:text-sm text-gray-500">Ausgaben</span>
-                    <span className="text-sm md:text-base font-display text-rose-600">
+                    <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Ausgaben</span>
+                    <span className="text-sm md:text-base font-display text-rose-700 dark:text-rose-400">
                       {formatAmount({ amount: totals.expenses })}
                     </span>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-xs md:text-sm text-gray-500">Bilanz</span>
-                    <span className={`text-sm md:text-base font-display ${totals.balance >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Bilanz</span>
+                    <span className={`text-sm md:text-base font-display ${totals.balance >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`}>
                       {formatAmount({ amount: totals.balance })}
                     </span>
                   </div>
@@ -234,75 +226,73 @@ export const TransactionManager = () => {
               <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50/10 dark:bg-gray-900/50 border-b border-gray-200/10 dark:border-gray-700/50">
+                    <thead className="bg-gray-200/50 dark:bg-gray-900/50 border-b border-gray-300/50 dark:border-gray-700/50">
                       <tr>
-                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase">
+                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase text-gray-700 dark:text-gray-300">
                           <div className="flex items-center gap-2">
                             Status
                             <div className="flex gap-1">
                               <button
                                 onClick={() => toggleAllTransactionsStatus(monthKey, false)}
-                                className="p-1 hover:text-purple-600 transition-colors"
-                                title="Alle als ausgeführt markieren"
+                                className="p-1 hover:text-purple-700 dark:hover:text-purple-400 transition-colors"
                               >
-                                <CheckCircle className="w-4 h-4 text-gray-500" />
+                                <CheckCircle className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                               </button>
                               <button
                                 onClick={() => toggleAllTransactionsStatus(monthKey, true)}
-                                className="p-1 hover:text-purple-600 transition-colors"
-                                title="Alle als ausstehend markieren"
+                                className="p-1 hover:text-purple-700 dark:hover:text-purple-400 transition-colors"
                               >
-                                <Clock className="w-4 h-4 text-gray-500" />
+                                <Clock className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                               </button>
                             </div>
                           </div>
                         </th>
-                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase">Datum</th>
-                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase">Beschreibung</th>
-                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase">Kategorie</th>
-                        <th className="px-2 md:px-6 py-3 text-right text-xs md:text-sm font-display tracking-wider uppercase">Betrag</th>
-                        <th className="px-2 md:px-6 py-3 text-right text-xs md:text-sm font-display tracking-wider uppercase">Aktionen</th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase text-gray-700 dark:text-gray-300">Datum</th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase text-gray-700 dark:text-gray-300">Beschreibung</th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase text-gray-700 dark:text-gray-300">Kategorie</th>
+                        <th className="px-2 md:px-6 py-3 text-right text-xs md:text-sm font-display tracking-wider uppercase text-gray-700 dark:text-gray-300">Betrag</th>
+                        <th className="px-2 md:px-6 py-3 text-right text-xs md:text-sm font-display tracking-wider uppercase text-gray-700 dark:text-gray-300">Aktionen</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200/10 dark:divide-gray-700/50">
+                    <tbody className="divide-y divide-gray-300/50 dark:divide-gray-700/50">
                       {monthTransactions.map(transaction => {
                         const isRecurring = isRecurringTransaction(transaction);
                         return (
-                          <tr key={transaction.id} className="hover:bg-gray-100/5 dark:hover:bg-gray-700/30 transition-colors">
+                          <tr key={transaction.id} className="hover:bg-gray-200/50 dark:hover:bg-gray-700/30 transition-colors">
                             <td className="px-2 md:px-6 py-3 md:py-4">
                               <button
                                 onClick={() => toggleTransactionPending(transaction.id)}
-                                className="p-1 hover:text-purple-600 transition-colors"
+                                className="p-1 hover:text-purple-700 dark:hover:text-purple-400 transition-colors"
                                 title={transaction.isPending ? 'Als ausgeführt markieren' : 'Als ausstehend markieren'}
                               >
                                 {transaction.isPending ? (
-                                  <Clock className="w-4 h-4 text-amber-500" />
+                                  <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                                 ) : (
-                                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                                  <CheckCircle className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
                                 )}
                               </button>
                             </td>
                             <td className="px-2 md:px-6 py-3 md:py-4">
-                              <span className="text-sm font-display tracking-wider">{formatDate(new Date(transaction.date))}</span>
+                              <span className="text-sm font-display tracking-wider text-gray-900 dark:text-white">{formatDate(new Date(transaction.date))}</span>
                             </td>
                             <td className="px-2 md:px-6 py-3 md:py-4">
                               <div className="flex items-center gap-2">
                                 {isRecurring ? (
-                                  <Repeat className="w-4 h-4 text-purple-500" />
+                                  <Repeat className="w-4 h-4 text-purple-700 dark:text-purple-400" />
                                 ) : (
-                                  <Zap className="w-4 h-4 text-amber-500" />
+                                  <Zap className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                                 )}
-                                <span className="text-sm font-display tracking-wider">{transaction.description}</span>
+                                <span className="text-sm font-display tracking-wider text-gray-900 dark:text-white">{transaction.description}</span>
                               </div>
                             </td>
                             <td className="px-2 md:px-6 py-3 md:py-4">
-                              <span className="px-2 py-1 rounded-full text-sm font-display tracking-wider bg-gray-100/5 dark:bg-gray-700/50">
+                              <span className="px-2 py-1 rounded-full text-sm font-display tracking-wider bg-gray-200/80 dark:bg-gray-700/50 text-gray-900 dark:text-white">
                                 {transaction.category}
                               </span>
                             </td>
                             <td className="px-2 md:px-6 py-3 md:py-4 text-right">
                               <span className={`text-sm font-display tracking-wider ${
-                                transaction.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
+                                transaction.type === 'income' ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'
                               }`}>
                                 {formatAmount(transaction)}
                               </span>
@@ -311,13 +301,13 @@ export const TransactionManager = () => {
                               <div className="flex gap-1 md:gap-2 justify-end">
                                 <button
                                   onClick={() => setEditingTransaction(transaction)}
-                                  className="p-1 hover:text-purple-600 transition-colors"
+                                  className="p-1 hover:text-purple-700 dark:hover:text-purple-400 transition-colors"
                                 >
                                   <Edit2 className="w-4 h-4" />
                                 </button>
                                 <button
                                   onClick={() => deleteTransaction(transaction.id)}
-                                  className="p-1 hover:text-rose-600 transition-colors"
+                                  className="p-1 hover:text-rose-700 dark:hover:text-rose-400 transition-colors"
                                 >
                                   <Trash2 className="w-4 h-4" />
                                 </button>

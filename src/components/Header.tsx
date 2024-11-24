@@ -37,14 +37,80 @@ export const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/75 dark:bg-gray-900/75 border-b border-gray-200 dark:border-gray-800">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 container mx-auto px-4">
+      <div className="rounded-[190px] backdrop-blur-lg bg-white/75 dark:bg-gray-900/75 border-2 border-white/80 dark:border-gray-700/80 shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30">
+        <div className="flex items-center justify-between h-16 px-4">
           {/* Logo */}
           <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl logo-icon logo-glow">
+              <BarChart3 className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-display gradient-text font-bold tracking-wider leading-none">
+                FinanzFlow
+              </h1>
+              <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-[0.2em] uppercase">
+                Finance Manager
+              </span>
+            </div>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-2">
+            {Object.entries(navigation).map(([key, section]) => (
+              <div key={key} className="relative">
+                <button
+                  onClick={() => toggleDropdown(key)}
+                  className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
+                >
+                  {key}
+                  <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === key ? 'rotate-180' : ''}`} />
+                </button>
+                {activeDropdown === key && (
+                  <div className="absolute top-full right-0 mt-2 w-48 rounded-xl bg-white/75 dark:bg-gray-900/75 backdrop-blur-lg border border-gray-200/50 dark:border-gray-800/50 shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30 overflow-hidden">
+                    <div className="py-2">
+                      {section.items.map((item) => (
+                        <a
+                          key={item.label}
+                          href={item.href}
+                          className="block px-4 py-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
+                          onClick={() => setActiveDropdown(null)}
+                        >
+                          {item.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors ml-2"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </button>
+          </nav>
+
+          {/* Mobile Menu Buttons */}
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </button>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 -ml-2 md:hidden"
+              className="p-2 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -52,96 +118,48 @@ export const Header = () => {
                 <Menu className="w-6 h-6" />
               )}
             </button>
-            <div className="flex items-center gap-2">
-              <div className="bg-gradient-to-br from-purple-600 to-blue-600 p-2 rounded-xl">
-                <BarChart3 className="w-6 h-6 text-white" />
-              </div>
-              <div className="flex flex-col">
-                <h1 className="text-2xl font-display bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent leading-none">
-                  FinanzFlow
-                </h1>
-                <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wider">
-                  FINANCE MANAGER
-                </span>
-              </div>
-            </div>
           </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            {Object.entries(navigation).map(([key, section]) => (
-              <div key={key} className="relative">
-                <button
-                  onClick={() => toggleDropdown(key)}
-                  className="flex items-center gap-1 py-2 hover:text-purple-600 transition-colors font-display text-lg"
-                >
-                  {key}
-                  <ChevronDown className={`w-4 h-4 transition-transform ${
-                    activeDropdown === key ? 'rotate-180' : ''
-                  }`} />
-                </button>
-                
-                {activeDropdown === key && (
-                  <div className="absolute top-full left-0 mt-1 w-48 py-2 rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 animate-slideDown">
-                    {section.items.map((item) => (
-                      <a
-                        key={item.href}
-                        href={item.href}
-                        className="block px-4 py-2 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:text-purple-600 transition-colors"
-                        onClick={() => setActiveDropdown(null)}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
         </div>
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 space-y-4">
-            {Object.entries(navigation).map(([key, section]) => (
-              <div key={key} className="space-y-2">
-                <button
-                  onClick={() => toggleDropdown(key)}
-                  className="flex items-center justify-between w-full px-2 py-2 hover:text-purple-600 transition-colors font-display text-lg"
-                >
-                  {key}
-                  <ChevronDown className={`w-4 h-4 transition-transform ${
-                    activeDropdown === key ? 'rotate-180' : ''
-                  }`} />
-                </button>
-                
-                {activeDropdown === key && (
-                  <div className="pl-4 space-y-2">
-                    {section.items.map((item) => (
-                      <a
-                        key={item.href}
-                        href={item.href}
-                        className="block px-4 py-2 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:text-purple-600 transition-colors rounded-lg"
-                        onClick={() => {
-                          setActiveDropdown(null);
-                          setMobileMenuOpen(false);
-                        }}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
+          <div className="absolute top-full left-0 right-0 mt-4 mx-4">
+            <div className="rounded-2xl backdrop-blur-lg bg-white/75 dark:bg-gray-900/75 border-2 border-white/80 dark:border-gray-700/80 shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30 overflow-hidden">
+              <div className="p-4 space-y-2">
+                {Object.entries(navigation).map(([key, section]) => (
+                  <div key={key} className="space-y-2">
+                    <button
+                      onClick={() => toggleDropdown(key)}
+                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
+                    >
+                      <span className="font-display">{key}</span>
+                      <ChevronDown 
+                        className={`w-4 h-4 transition-transform ${
+                          activeDropdown === key ? 'rotate-180' : ''
+                        }`} 
+                      />
+                    </button>
+                    {activeDropdown === key && (
+                      <div className="pl-4 space-y-1">
+                        {section.items.map((item) => (
+                          <a
+                            key={item.label}
+                            href={item.href}
+                            className="block px-4 py-2.5 rounded-xl hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
+                            onClick={() => {
+                              setActiveDropdown(null);
+                              setMobileMenuOpen(false);
+                            }}
+                          >
+                            {item.label}
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         )}
       </div>
