@@ -3,34 +3,31 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 import { Tag } from 'lucide-react';
 import { useStore } from '../store';
 
-const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#6366f1'];
+const COLORS = [
+  '#8b5cf6', // Violett
+  '#ec4899', // Pink
+  '#f59e0b', // Orange
+  '#10b981', // Smaragdgrün
+  '#3b82f6', // Blau
+  '#ef4444', // Rot
+  '#06b6d4', // Cyan
+  '#f97316', // Helles Orange
+  '#6366f1', // Indigo
+  '#84cc16', // Limette
+  '#a855f7', // Lila
+  '#14b8a6', // Türkis
+];
 
-  export const CategoryAnalysis = () => {
+export const CategoryAnalysis = () => {
   const { getCurrentMonthAnalysis } = useStore();
   const analysis = getCurrentMonthAnalysis();
-  
+
   const categoryData = Object.entries(analysis.categories)
     .map(([name, amount]) => ({
       name,
       value: Math.abs(amount)
     }))
     .sort((a, b) => b.value - a.value);
-
-  // Erweiterte Farbpalette mit 12 unterschiedlichen Farben
-  const COLORS = [
-    '#8b5cf6', // Violett
-    '#ec4899', // Pink
-    '#f59e0b', // Orange
-    '#10b981', // Smaragdgrün
-    '#3b82f6', // Blau
-    '#ef4444', // Rot
-    '#06b6d4', // Cyan
-    '#f97316', // Helles Orange
-    '#6366f1', // Indigo
-    '#84cc16', // Limette
-    '#a855f7', // Lila
-    '#14b8a6', // Türkis
-  ];
 
   const renderCustomizedLabel = (props: any) => {
     const { cx, cy, midAngle, innerRadius, outerRadius, value, index, fill } = props;
@@ -64,15 +61,6 @@ const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#6366f1'
     );
   };
 
-  // Angepasstes Rendering für die Legende
-  const renderColorfulLegendText = (value: string, entry: any) => {
-    return (
-      <span className="text-sm font-medium" style={{ color: entry.color }}>
-        {entry.payload.name} (€{entry.payload.value.toFixed(2)})
-      </span>
-    );
-  };
-
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
@@ -80,7 +68,7 @@ const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#6366f1'
         <h2 className="text-xl font-display">Kategorien (Aktueller Monat)</h2>
       </div>
       
-      <div className="h-[300px] rounded-2xl bg-white dark:bg-gray-800 p-6">
+      <div className="h-[300px] rounded-2xl bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm p-6 border border-gray-200/10">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -109,7 +97,6 @@ const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#6366f1'
               }}
               itemStyle={{ color: props => props.payload.fill }}
             />
-            
           </PieChart>
         </ResponsiveContainer>
       </div>
@@ -118,7 +105,7 @@ const COLORS = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#6366f1'
         {categoryData.map((category, index) => (
           <div
             key={category.name}
-            className="p-4 rounded-lg bg-white dark:bg-gray-800"
+            className="p-4 rounded-lg bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/10"
           >
             <div className="flex items-center gap-2">
               <div

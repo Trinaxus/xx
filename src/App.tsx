@@ -9,14 +9,16 @@ import { CategoryAnalysis } from './components/CategoryAnalysis';
 import { CSVImport } from './components/CSVImport';
 import { SavingsOverview } from './components/SavingsOverview';
 import { CreditCardOverview } from './components/CreditCardOverview';
+import { NeuralBackground } from './components/NeuralBackground';
 import { useStore } from './store';
 
 function App() {
   const theme = useStore(state => state.theme);
 
   return (
-    <div className={theme}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+    <div className={theme} style={{ position: 'relative', minHeight: '100vh' }}>
+      <NeuralBackground />
+      <div className="relative bg-transparent text-gray-900 dark:text-gray-100 transition-colors">
         <Header />
         
         <main className="container mx-auto px-4 py-8 space-y-8">
@@ -38,7 +40,7 @@ function App() {
           </section>
 
           <section id="monthly-transactions">
-            <MonthlyTransactions />
+            {/* <MonthlyTransactions /> */}
           </section>
           
           <section id="transactions">

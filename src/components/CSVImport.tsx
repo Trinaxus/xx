@@ -121,7 +121,7 @@ export const CSVImport = () => {
   };
 
   return (
-    <div className="p-6 rounded-2xl bg-white dark:bg-gray-800">
+    <div className="p-6 rounded-2xl bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/10">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Upload className="w-6 h-6 text-purple-600" />
@@ -130,7 +130,7 @@ export const CSVImport = () => {
 
         <button
           onClick={() => setShowExportModal(true)}
-          className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-gray-100/5 dark:bg-gray-700/50 text-gray-900 dark:text-white rounded-lg hover:bg-gray-200/20 dark:hover:bg-gray-600/50 transition-colors flex items-center gap-2"
         >
           <Download className="w-5 h-5" />
           <span>CSV Export</span>
@@ -138,7 +138,7 @@ export const CSVImport = () => {
       </div>
 
       {error && (
-        <div className="mb-4 p-4 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 rounded-lg flex items-center gap-2">
+        <div className="mb-4 p-4 bg-rose-100/10 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 rounded-lg flex items-center gap-2">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
           <p>{error}</p>
         </div>
@@ -159,7 +159,7 @@ export const CSVImport = () => {
 
       <button
         onClick={() => fileInputRef.current?.click()}
-        className="w-full p-8 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg hover:border-purple-500 transition-colors"
+        className="w-full p-8 border-2 border-dashed border-gray-300/50 dark:border-gray-700/50 rounded-lg hover:border-purple-500/50 transition-colors"
       >
         <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
         <p className="text-center font-display">
@@ -179,7 +179,7 @@ export const CSVImport = () => {
           {availableMonths.map(({ key, label }) => (
             <div
               key={key}
-              className="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50"
+              className="flex items-center justify-between p-4 rounded-lg bg-white/5 dark:bg-gray-800/50"
             >
               <span>{label}</span>
               <button
@@ -197,7 +197,7 @@ export const CSVImport = () => {
       {/* Export Modal */}
       {showExportModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-lg w-full">
+          <div className="bg-white/5 dark:bg-gray-800/50 rounded-2xl p-6 max-w-lg w-full">
             <h3 className="text-xl font-display mb-4">Monate für Export auswählen</h3>
             
             <div className="space-y-4 max-h-[60vh] overflow-y-auto">
@@ -223,7 +223,7 @@ export const CSVImport = () => {
             <div className="flex gap-4 mt-6">
               <button
                 onClick={handleExportCSV}
-                className="flex-1 py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                className="flex-1 py-2 px-4 bg-purple-600/50 text-white rounded-lg hover:bg-purple-700/50 transition-colors"
               >
                 Exportieren
               </button>
@@ -232,7 +232,7 @@ export const CSVImport = () => {
                   setShowExportModal(false);
                   setSelectedMonths([]);
                 }}
-                className="flex-1 py-2 px-4 bg-gray-200 dark:bg-gray-700 rounded-lg hover:opacity-90 transition-opacity"
+                className="flex-1 py-2 px-4 bg-gray-200/20 dark:bg-gray-700/50 rounded-lg hover:opacity-90 transition-opacity"
               >
                 Abbrechen
               </button>

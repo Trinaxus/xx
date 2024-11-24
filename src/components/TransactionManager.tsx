@@ -136,18 +136,16 @@ export const TransactionManager = () => {
   return (
     <div className="space-y-6">
       {/* Controls Bar */}
-      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-        <div className="flex-1 w-full md:w-auto">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Transaktion suchen..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
-            />
-          </div>
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-6">
+        <div className="flex items-center gap-2 relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Transaktion suchen..."
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200/10 dark:border-gray-700/50 bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm"
+          />
         </div>
         
         <div className="flex flex-wrap gap-4">
@@ -156,7 +154,7 @@ export const TransactionManager = () => {
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
+              className="px-3 py-1 rounded-lg border border-gray-200/10 dark:border-gray-700/50 bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm"
             >
               <option value="all">Alle Transaktionen</option>
               <option value="income">Nur Einnahmen</option>
@@ -167,7 +165,7 @@ export const TransactionManager = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={handleSelectAllMonths}
-              className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-gray-100/5 dark:bg-gray-700/50 text-gray-900 dark:text-white rounded-lg hover:bg-gray-200/10 dark:hover:bg-gray-600/50 transition-colors flex items-center gap-2"
             >
               <span>{selectAllMonths ? 'Alle zuklappen' : 'Alle aufklappen'}</span>
             </button>
@@ -175,7 +173,7 @@ export const TransactionManager = () => {
 
           <button
             onClick={() => setShowForm(true)}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-purple-600/80 hover:bg-purple-700/80 text-white rounded-lg transition-colors flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
             <span>Neue Transaktion</span>
@@ -192,48 +190,53 @@ export const TransactionManager = () => {
           const totals = calculateMonthlyTotals(monthTransactions);
 
           return (
-            <div key={monthKey} className="rounded-2xl bg-white dark:bg-gray-800 overflow-hidden border border-gray-200 dark:border-gray-700">
+            <div key={monthKey} className="rounded-2xl bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/10 overflow-hidden">
               {/* Month Header */}
               <button
                 onClick={() => toggleMonth(monthKey)}
-                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                className="w-full px-4 md:px-6 py-3 md:py-4 flex items-center justify-between hover:bg-gray-50/10 dark:hover:bg-gray-700/30"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-4">
                   {isExpanded ? (
-                    <ChevronUp className="w-5 h-5 text-gray-400" />
+                    <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                    <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
                   )}
-                  <h3 className="text-lg font-display">{monthName}</h3>
+                  <span className="text-sm md:text-base font-display">{monthName}</span>
+                  <span className="text-xs md:text-sm text-gray-500">
+                    ({monthTransactions.length} {monthTransactions.length === 1 ? 'Transaktion' : 'Transaktionen'})
+                  </span>
                 </div>
-                
-                <div className="flex items-center gap-6">
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">Einnahmen</p>
-                    <p className="font-medium text-emerald-600">+€{totals.income.toFixed(2)}</p>
+
+                <div className="flex items-center gap-2 md:gap-4">
+                  <div className="flex flex-col items-end">
+                    <span className="text-xs md:text-sm text-gray-500">Einnahmen</span>
+                    <span className="text-sm md:text-base font-display text-emerald-600">
+                      {formatAmount({ amount: totals.income })}
+                    </span>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">Ausgaben</p>
-                    <p className="font-medium text-rose-600">-€{totals.expenses.toFixed(2)}</p>
+                  <div className="flex flex-col items-end">
+                    <span className="text-xs md:text-sm text-gray-500">Ausgaben</span>
+                    <span className="text-sm md:text-base font-display text-rose-600">
+                      {formatAmount({ amount: totals.expenses })}
+                    </span>
                   </div>
-                  <div className="text-right min-w-[120px]">
-                    <p className="text-sm text-gray-500">Bilanz</p>
-                    <p className={`font-medium ${
-                      totals.balance >= 0 ? 'text-emerald-600' : 'text-rose-600'
-                    }`}>
-                      {totals.balance >= 0 ? '+' : ''}{totals.balance.toFixed(2)}€
-                    </p>
+                  <div className="flex flex-col items-end">
+                    <span className="text-xs md:text-sm text-gray-500">Bilanz</span>
+                    <span className={`text-sm md:text-base font-display ${totals.balance >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {formatAmount({ amount: totals.balance })}
+                    </span>
                   </div>
                 </div>
               </button>
 
               {/* Transactions Table */}
-              {isExpanded && (
+              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-900/50">
+                    <thead className="bg-gray-50/10 dark:bg-gray-900/50 border-b border-gray-200/10 dark:border-gray-700/50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-sm font-display">
+                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase">
                           <div className="flex items-center gap-2">
                             Status
                             <div className="flex gap-1">
@@ -242,7 +245,7 @@ export const TransactionManager = () => {
                                 className="p-1 hover:text-purple-600 transition-colors"
                                 title="Alle als ausgeführt markieren"
                               >
-                                <CheckCircle className="w-4 h-4 text-green-500" />
+                                <CheckCircle className="w-4 h-4 text-gray-500" />
                               </button>
                               <button
                                 onClick={() => toggleAllTransactionsStatus(monthKey, true)}
@@ -254,69 +257,67 @@ export const TransactionManager = () => {
                             </div>
                           </div>
                         </th>
-                        <th className="px-6 py-3 text-left text-sm font-display">Datum</th>
-                        <th className="px-6 py-3 text-left text-sm font-display">Beschreibung</th>
-                        <th className="px-6 py-3 text-left text-sm font-display">Kategorie</th>
-                        <th className="px-6 py-3 text-right text-sm font-display">Betrag</th>
-                        <th className="px-6 py-3 text-right text-sm font-display">Aktionen</th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase">Datum</th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase">Beschreibung</th>
+                        <th className="px-2 md:px-6 py-3 text-left text-xs md:text-sm font-display tracking-wider uppercase">Kategorie</th>
+                        <th className="px-2 md:px-6 py-3 text-right text-xs md:text-sm font-display tracking-wider uppercase">Betrag</th>
+                        <th className="px-2 md:px-6 py-3 text-right text-xs md:text-sm font-display tracking-wider uppercase">Aktionen</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    <tbody className="divide-y divide-gray-200/10 dark:divide-gray-700/50">
                       {monthTransactions.map(transaction => {
                         const isRecurring = isRecurringTransaction(transaction);
                         return (
-                          <tr key={transaction.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="px-6 py-4">
+                          <tr key={transaction.id} className="hover:bg-gray-100/5 dark:hover:bg-gray-700/30 transition-colors">
+                            <td className="px-2 md:px-6 py-3 md:py-4">
                               <button
                                 onClick={() => toggleTransactionPending(transaction.id)}
                                 className="p-1 hover:text-purple-600 transition-colors"
                                 title={transaction.isPending ? 'Als ausgeführt markieren' : 'Als ausstehend markieren'}
                               >
                                 {transaction.isPending ? (
-                                  <Clock className="w-4 h-4 text-gray-500" />
+                                  <Clock className="w-4 h-4 text-amber-500" />
                                 ) : (
-                                  <CheckCircle className="w-4 h-4 text-green-500" />
+                                  <CheckCircle className="w-4 h-4 text-emerald-500" />
                                 )}
                               </button>
                             </td>
-                            <td className="px-6 py-4">{formatDate(new Date(transaction.date))}</td>
-                            <td className="px-6 py-4">
+                            <td className="px-2 md:px-6 py-3 md:py-4">
+                              <span className="text-sm font-display tracking-wider">{formatDate(new Date(transaction.date))}</span>
+                            </td>
+                            <td className="px-2 md:px-6 py-3 md:py-4">
                               <div className="flex items-center gap-2">
-                                {transaction.isRecurring ? (
+                                {isRecurring ? (
                                   <Repeat className="w-4 h-4 text-purple-500" />
                                 ) : (
                                   <Zap className="w-4 h-4 text-amber-500" />
                                 )}
-                                <span>{transaction.description}</span>
+                                <span className="text-sm font-display tracking-wider">{transaction.description}</span>
                               </div>
                             </td>
-                            <td className="px-6 py-4">
-                              <span className="px-2 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-700">
+                            <td className="px-2 md:px-6 py-3 md:py-4">
+                              <span className="px-2 py-1 rounded-full text-sm font-display tracking-wider bg-gray-100/5 dark:bg-gray-700/50">
                                 {transaction.category}
                               </span>
                             </td>
-                            <td className="px-6 py-4 text-right">
-                              <span className={`font-medium ${
-                                transaction.type === 'income' 
-                                  ? 'text-emerald-600 dark:text-emerald-400' 
-                                  : 'text-rose-600 dark:text-rose-400'
-                              } ${transaction.isPending ? 'opacity-50' : ''}`}>
-                                {transaction.type === 'income' ? '+' : '-'}{formatAmount(transaction)}
+                            <td className="px-2 md:px-6 py-3 md:py-4 text-right">
+                              <span className={`text-sm font-display tracking-wider ${
+                                transaction.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
+                              }`}>
+                                {formatAmount(transaction)}
                               </span>
                             </td>
-                            <td className="px-6 py-4">
-                              <div className="flex gap-2 justify-end">
+                            <td className="px-2 md:px-6 py-3 md:py-4 text-right">
+                              <div className="flex gap-1 md:gap-2 justify-end">
                                 <button
                                   onClick={() => setEditingTransaction(transaction)}
                                   className="p-1 hover:text-purple-600 transition-colors"
-                                  title="Bearbeiten"
                                 >
                                   <Edit2 className="w-4 h-4" />
                                 </button>
                                 <button
                                   onClick={() => deleteTransaction(transaction.id)}
                                   className="p-1 hover:text-rose-600 transition-colors"
-                                  title="Löschen"
                                 >
                                   <Trash2 className="w-4 h-4" />
                                 </button>
@@ -328,13 +329,13 @@ export const TransactionManager = () => {
                     </tbody>
                   </table>
                 </div>
-              )}
+              </div>
             </div>
           );
         })}
 
         {groupedTransactions.size === 0 && (
-          <div className="text-center py-12 text-gray-500 bg-white dark:bg-gray-800 rounded-2xl">
+          <div className="text-center py-12 text-gray-500 bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/10 rounded-2xl">
             <Calendar className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p className="font-display">
               {searchTerm 
@@ -347,8 +348,8 @@ export const TransactionManager = () => {
 
       {/* Transaction Form Modals */}
       {(showForm || editingTransaction) && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white/10 dark:bg-gray-800/50 backdrop-blur-lg border border-gray-200/10 rounded-2xl p-6 max-w-2xl w-full">
             <h3 className="text-xl font-display mb-4">
               {editingTransaction ? 'Transaktion bearbeiten' : 'Neue Transaktion'}
             </h3>

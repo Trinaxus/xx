@@ -59,10 +59,10 @@ export const TransactionList = () => {
         </div>
       )}
 
-      <div className="rounded-2xl bg-white dark:bg-gray-800 overflow-hidden">
+      <div className="rounded-2xl bg-transparent backdrop-blur-sm border border-gray-200/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-900/50">
+            <thead className="border-b border-gray-200/10 dark:border-gray-700/50">
               <tr>
                 <th className="px-6 py-3 text-left text-sm font-display">Datum</th>
                 <th className="px-6 py-3 text-left text-sm font-display">Beschreibung</th>
@@ -71,9 +71,9 @@ export const TransactionList = () => {
                 <th className="px-6 py-3 text-left text-sm font-display">Aktionen</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="divide-y divide-gray-200/10 dark:divide-gray-700/50">
               {filteredTransactions.map(transaction => (
-                <tr key={transaction.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <tr key={transaction.id} className="hover:bg-gray-100/5 dark:hover:bg-gray-700/30 transition-colors">
                   <td className="px-6 py-4">{formatDate(new Date(transaction.date))}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
@@ -128,12 +128,12 @@ export const TransactionList = () => {
       </button>
 
       <div
-        className={`overflow-hidden transition-max-height duration-500 ease-in-out ${
+        className={`overflow-hidden transition-max-height duration-500 ease-in-out rounded-2xl bg-transparent backdrop-blur-sm border border-gray-200/10 ${
           isOpen ? 'max-h-screen' : 'max-h-0'
         }`}
       >
-        <table className="w-full mt-4">
-          <thead className="bg-gray-50 dark:bg-gray-900/50">
+        <table className="w-full">
+          <thead className="border-b border-gray-200/10 dark:border-gray-700/50">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-display">Datum</th>
               <th className="px-6 py-3 text-left text-sm font-display">Beschreibung</th>
@@ -142,30 +142,44 @@ export const TransactionList = () => {
               <th className="px-6 py-3 text-left text-sm font-display">Aktionen</th>
             </tr>
           </thead>
-          <tbody>
-            {/* Beispielzeilen */}
-            <tr>
-              <td className="px-6 py-4">01.01.2024</td>
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-amber-500" />
-                  <span>Beispielbeschreibung</span>
-                </div>
-              </td>
-              <td className="px-6 py-4">Kategorie</td>
-              <td className="px-6 py-4">€100,00</td>
-              <td className="px-6 py-4">
-                <div className="flex gap-2 justify-end">
-                  <button className="p-1 hover:text-purple-600 transition-colors" title="Bearbeiten">
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button className="p-1 hover:text-rose-600 transition-colors" title="Löschen">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-            {/* Weitere Zeilen */}
+          <tbody className="divide-y divide-gray-200/10 dark:divide-gray-700/50">
+            {filteredTransactions.map(transaction => (
+              <tr key={transaction.id} className="hover:bg-gray-100/5 dark:hover:bg-gray-700/30 transition-colors">
+                <td className="px-6 py-4">{formatDate(new Date(transaction.date))}</td>
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    {transaction.isRecurring ? (
+                      <Repeat className="w-4 h-4 text-purple-500" />
+                    ) : (
+                      <Zap className="w-4 h-4 text-amber-500" />
+                    )}
+                    <span>{transaction.description}</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4">{transaction.category}</td>
+                <td className="px-6 py-4">
+                  <span className={transaction.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}>
+                    {formatAmount(transaction)}
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setEditingTransaction(transaction)}
+                      className="p-1 hover:text-purple-600 transition-colors"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => deleteTransaction(transaction.id)}
+                      className="p-1 hover:text-rose-600 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
