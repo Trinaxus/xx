@@ -21,12 +21,12 @@ export const Header = () => {
         { label: 'Monatsübersicht', href: '#monthly-transactions' },
         { label: 'Alle Transaktionen', href: '#transactions' },
         { label: 'Neue Transaktion', href: '#new-transaction' },
-        { label: 'Wiederkehrende', href: '#recurring' },
+      
       ]
     },
     Verwaltung: {
       items: [
-        { label: 'Budget', href: '#budgets' },
+        
         { label: 'CSV Import', href: '#import' },
       ]
     }
@@ -38,7 +38,7 @@ export const Header = () => {
 
   return (
     <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 container mx-auto px-4">
-      <div className="rounded-[190px] backdrop-blur-lg bg-white/75 dark:bg-gray-900/75 border-2 border-white/80 dark:border-gray-700/80 shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30">
+      <div className="rounded-[190px] backdrop-blur-sm bg-white/5 dark:bg-gray-800/50 border border-gray-200/10">
         <div className="flex items-center justify-between h-16 px-4">
           {/* Logo */}
           <div className="flex items-center gap-3">
@@ -124,7 +124,7 @@ export const Header = () => {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="absolute top-full left-0 right-0 mt-4 mx-4">
-            <div className="rounded-2xl backdrop-blur-lg bg-white/75 dark:bg-gray-900/75 border-2 border-white/80 dark:border-gray-700/80 shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30 overflow-hidden">
+            <div className="rounded-2xl backdrop-blur-sm bg-white/5 dark:bg-gray-800/50 border border-gray-200/10 overflow-hidden">
               <div className="p-4 space-y-2">
                 {Object.entries(navigation).map(([key, section]) => (
                   <div key={key} className="space-y-2">
