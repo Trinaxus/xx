@@ -44,11 +44,11 @@ Dieses Projekt ist eine umfassende Finanzübersichtsanwendung, die es Benutzern 
    ```
 3. Installiere die Abhängigkeiten:
    ```bash
-   npm install
+   pnpm install
    ```
 4. Starte die Anwendung:
    ```bash
-   npm start
+   pnpm def
    ```
 
 ## Mitwirken
