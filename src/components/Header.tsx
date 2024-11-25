@@ -70,13 +70,15 @@ export const Header = () => {
                   <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === key ? 'rotate-180' : ''}`} />
                 </button>
                 {activeDropdown === key && (
-                  <div className="absolute top-full right-0 mt-2 w-48 rounded-xl bg-white/75 dark:bg-gray-900/75 backdrop-blur-lg border border-gray-200/50 dark:border-gray-800/50 shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30 overflow-hidden">
-                    <div className="py-2">
+                  <div 
+                    className="absolute top-full right-0 mt-2 w-48 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/10 shadow-lg overflow-hidden"
+                  >
+                    <div className="py-1">
                       {section.items.map((item) => (
                         <a
                           key={item.label}
                           href={item.href}
-                          className="block px-4 py-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
+                          className="block px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700/50"
                           onClick={() => setActiveDropdown(null)}
                         >
                           {item.label}
@@ -165,20 +167,24 @@ export const Header = () => {
                       />
                     </button>
                     {activeDropdown === key && (
-                      <div className="pl-4 space-y-1">
-                        {section.items.map((item) => (
-                          <a
-                            key={item.label}
-                            href={item.href}
-                            className="block px-4 py-2.5 rounded-xl hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
-                            onClick={() => {
-                              setActiveDropdown(null);
-                              setMobileMenuOpen(false);
-                            }}
-                          >
-                            {item.label}
-                          </a>
-                        ))}
+                      <div 
+                        className="absolute right-0 mt-2 w-48 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/10 shadow-lg overflow-hidden"
+                      >
+                        <div className="py-1">
+                          {section.items.map((item) => (
+                            <a
+                              key={item.label}
+                              href={item.href}
+                              className="block px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                              onClick={() => {
+                                setActiveDropdown(null);
+                                setMobileMenuOpen(false);
+                              }}
+                            >
+                              {item.label}
+                            </a>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
