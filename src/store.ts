@@ -9,6 +9,7 @@ interface StoreState {
   budgets: Budget[];
   recurringTransactions: Transaction[];
   baseAccountBalance: number;
+  neuralBackground: boolean;
 }
 
 interface StoreActions {
@@ -38,6 +39,7 @@ interface StoreActions {
   getAvailableBalance: () => number;
   updateRecurringTransactions: (recurringId: string, updates: Partial<Transaction>) => void;
   deleteTransactions: (transactionIds: string[]) => void;
+  toggleNeuralBackground: () => void;
 }
 
 export const useStore = create<StoreState & StoreActions>()(
@@ -48,6 +50,7 @@ export const useStore = create<StoreState & StoreActions>()(
       budgets: [],
       recurringTransactions: [],
       baseAccountBalance: 0,
+      neuralBackground: true,
       
       toggleTheme: () => set((state) => ({ 
         theme: state.theme === 'dark' ? 'light' : 'dark' 
@@ -303,7 +306,17 @@ export const useStore = create<StoreState & StoreActions>()(
         set((state) => ({
           transactions: state.transactions.filter(t => !transactionIds.includes(t.id))
         }));
-      }
+      },
+
+      toggleNeuralBackground: () => {
+        const newState = !get().neuralBackground;
+        if (newState) {
+          document.body.classList.add('neural-bg');
+        } else {
+          document.body.classList.remove('neural-bg');
+        }
+        set({ neuralBackground: newState });
+      },
     }),
     {
       name: 'finanz-flow-storage',
@@ -313,7 +326,8 @@ export const useStore = create<StoreState & StoreActions>()(
         budgets: state.budgets,
         recurringTransactions: state.recurringTransactions,
         theme: state.theme,
-        baseAccountBalance: state.baseAccountBalance
+        baseAccountBalance: state.baseAccountBalance,
+        neuralBackground: state.neuralBackground
       }),
       version: 1
     }
