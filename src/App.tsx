@@ -14,11 +14,12 @@ import { useStore } from './store';
 
 function App() {
   const theme = useStore(state => state.theme);
+  const neuralBackground = useStore(state => state.neuralBackground);
 
   return (
     <div className={theme} style={{ position: 'relative', minHeight: '100vh' }}>
       <NeuralBackground />
-      <div className="relative bg-transparent text-gray-900 dark:text-gray-100 transition-colors">
+      <div className="relative text-gray-900 dark:text-gray-100 transition-colors">
         <Header />
         
         <main className="container mx-auto px-4 pt-28 pb-8 space-y-8">

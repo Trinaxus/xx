@@ -7,11 +7,17 @@ interface Point {
   vx: number;
   vy: number;
   color: string;
+  size: number;
+  pulsePhase: number;
+  pulseSpeed: number;
+  glowIntensity: number;
 }
 
 export const NeuralBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const theme = useStore(state => state.theme);
+  const neuralBackground = useStore(state => state.neuralBackground);
+  const frameRef = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -20,124 +26,154 @@ export const NeuralBackground: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set initial size
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resize();
 
-    // Create points
-    const points: Point[] = [];
     const colors = {
-      pink: 'rgba(255, 20, 147, 0.5)',  // 50% transparent deep pink
-      blue: 'rgba(0, 191, 255, 0.5)'    // 50% transparent deep sky blue
+      pink: 'rgba(255, 20, 147, 0.6)',
+      blue: 'rgba(0, 191, 255, 0.6)',
+      purple: 'rgba(147, 51, 234, 0.6)',
+      cyan: 'rgba(34, 211, 238, 0.6)'
     };
 
-    for (let i = 0; i < 50; i++) {
+    const colorKeys = Object.keys(colors) as (keyof typeof colors)[];
+
+    const points: Point[] = [];
+    for (let i = 0; i < 60; i++) {
       points.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 1.5, // Slightly slower movement
-        vy: (Math.random() - 0.5) * 1.5,
-        color: Math.random() > 0.5 ? colors.pink : colors.blue
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: (Math.random() - 0.5) * 1.2,
+        color: colors[colorKeys[Math.floor(Math.random() * colorKeys.length)]],
+        size: 2 + Math.random() * 2,
+        pulsePhase: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.03 + Math.random() * 0.02,
+        glowIntensity: 0.5 + Math.random() * 0.5
       });
     }
+
+    let animationFrameId: number;
 
     function animate() {
-      // Clear canvas with theme background
-      ctx.fillStyle = theme === 'dark' ? '#111827' : '#F9FAFB';
+      frameRef.current++;
+      
+      ctx.fillStyle = theme === 'dark' ? '#0F172A' : '#F9FAFB';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw connections first
-      ctx.lineWidth = 1.5; // Slightly thinner lines
-
-      points.forEach((point, i) => {
-        points.slice(i + 1).forEach(other => {
-          const dx = other.x - point.x;
-          const dy = other.y - point.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 200) {
-            ctx.beginPath();
-            ctx.moveTo(point.x, point.y);
-            ctx.lineTo(other.x, other.y);
-            const opacity = (1 - distance / 200) * 0.3; // Reduced opacity for connections
-            
-            // Create smooth gradient for line
-            const gradient = ctx.createLinearGradient(
-              point.x, point.y,
-              other.x, other.y
-            );
-            
-            // Extract base colors and create more transparent versions
-            const color1 = point.color.replace('0.5)', `${opacity})`);
-            const color2 = other.color.replace('0.5)', `${opacity})`);
-            
-            gradient.addColorStop(0, color1);
-            gradient.addColorStop(0.5, `rgba(255, 255, 255, ${opacity * 0.1})`); // Soft middle point
-            gradient.addColorStop(1, color2);
-            
-            ctx.strokeStyle = gradient;
-            ctx.stroke();
-          }
-        });
-      });
-
-      // Update and draw points
-      points.forEach(point => {
-        // Move point with smoother motion
-        point.x += point.vx;
-        point.y += point.vy;
-
-        // Smooth bounce off edges
-        if (point.x < 0 || point.x > canvas.width) {
-          point.vx *= -0.95; // Slight damping
-          point.x = point.x < 0 ? 0 : canvas.width;
-        }
-        if (point.y < 0 || point.y > canvas.height) {
-          point.vy *= -0.95; // Slight damping
-          point.y = point.y < 0 ? 0 : canvas.height;
-        }
-
-        // Draw point with soft glow
-        const radius = 3; // Slightly smaller points
-        const glowSize = 12; // Larger glow
-
-        // Outer glow
-        const glowGradient = ctx.createRadialGradient(
-          point.x, point.y, 0,
-          point.x, point.y, glowSize
+      if (neuralBackground) {
+        const gradient = ctx.createRadialGradient(
+          canvas.width / 2, canvas.height / 2, 0,
+          canvas.width / 2, canvas.height / 2, canvas.width / 2
         );
-        glowGradient.addColorStop(0, point.color.replace('0.5)', '0.3)')); // Softer center
-        glowGradient.addColorStop(0.5, point.color.replace('0.5)', '0.1)')); // Very soft middle
-        glowGradient.addColorStop(1, point.color.replace('0.5)', '0)')); // Fade to transparent
+        gradient.addColorStop(0, theme === 'dark' ? '#1E293B' : '#F8FAFC');
+        gradient.addColorStop(1, theme === 'dark' ? '#0F172A' : '#F9FAFB');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, glowSize, 0, Math.PI * 2);
-        ctx.fillStyle = glowGradient;
-        ctx.fill();
+        points.forEach(point => {
+          const acceleration = Math.sin(frameRef.current * 0.01) * 0.1;
+          point.x += point.vx * (1 + acceleration);
+          point.y += point.vy * (1 + acceleration);
 
-        // Core point
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = point.color;
-        ctx.fill();
-      });
+          if (point.x < 0 || point.x > canvas.width) {
+            point.vx *= -0.95;
+            point.x = point.x < 0 ? 0 : canvas.width;
+          }
+          if (point.y < 0 || point.y > canvas.height) {
+            point.vy *= -0.95;
+            point.y = point.y < 0 ? 0 : canvas.height;
+          }
 
-      requestAnimationFrame(animate);
+          point.pulsePhase += point.pulseSpeed;
+        });
+
+        ctx.lineWidth = 1.5;
+        points.forEach((point, i) => {
+          points.slice(i + 1).forEach(other => {
+            const dx = other.x - point.x;
+            const dy = other.y - point.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const maxDistance = 250;
+
+            if (distance < maxDistance) {
+              const midX = (point.x + other.x) / 2;
+              const midY = (point.y + other.y) / 2;
+              
+              const curveMagnitude = Math.sin(frameRef.current * 0.02) * 20;
+              const controlX = midX + Math.sin(frameRef.current * 0.01) * curveMagnitude;
+              const controlY = midY + Math.cos(frameRef.current * 0.01) * curveMagnitude;
+
+              ctx.beginPath();
+              ctx.moveTo(point.x, point.y);
+              ctx.quadraticCurveTo(controlX, controlY, other.x, other.y);
+
+              const opacity = (1 - distance / maxDistance) * 0.4;
+              const gradient = ctx.createLinearGradient(point.x, point.y, other.x, other.y);
+              
+              const pulseIntensity = Math.sin(frameRef.current * 0.05) * 0.2 + 0.8;
+              const color1 = point.color.replace('0.6)', `${opacity * pulseIntensity})`);
+              const color2 = other.color.replace('0.6)', `${opacity * pulseIntensity})`);
+              
+              gradient.addColorStop(0, color1);
+              gradient.addColorStop(0.5, `rgba(255, 255, 255, ${opacity * 0.15})`);
+              gradient.addColorStop(1, color2);
+              
+              ctx.strokeStyle = gradient;
+              ctx.stroke();
+            }
+          });
+        });
+
+        points.forEach(point => {
+          const pulseSize = 1 + Math.sin(point.pulsePhase) * 0.3;
+          const radius = point.size * pulseSize;
+          const glowSize = 15 * point.glowIntensity * pulseSize;
+
+          for (let i = 0; i < 3; i++) {
+            const layerSize = glowSize * (1 - i * 0.2);
+            const glowGradient = ctx.createRadialGradient(
+              point.x, point.y, 0,
+              point.x, point.y, layerSize
+            );
+
+            const baseColor = point.color.replace('0.6)', '');
+            glowGradient.addColorStop(0, baseColor + `${0.3 * (1 - i * 0.2)})`);
+            glowGradient.addColorStop(0.5, baseColor + `${0.15 * (1 - i * 0.2)})`);
+            glowGradient.addColorStop(1, baseColor + '0)');
+
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, layerSize, 0, Math.PI * 2);
+            ctx.fillStyle = glowGradient;
+            ctx.fill();
+          }
+
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+          ctx.fillStyle = point.color;
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(point.x - radius * 0.3, point.y - radius * 0.3, radius * 0.2, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+          ctx.fill();
+        });
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
     }
 
-    // Handle resize
     window.addEventListener('resize', resize);
-    
-    // Start animation
     animate();
 
     return () => {
       window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrameId);
     };
-  }, [theme]);
+  }, [theme, neuralBackground]);
 
   return (
     <canvas
@@ -148,7 +184,7 @@ export const NeuralBackground: React.FC = () => {
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 0
+        zIndex: -1
       }}
     />
   );

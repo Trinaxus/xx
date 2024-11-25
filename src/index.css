@@ -9,7 +9,7 @@
   
   body {
     @apply antialiased;
-    transition: background-color 0.5s ease, color 0.5s ease;
+    transition: color 0.5s ease;
   }
 
   /* Smooth scrolling for anchor links */
@@ -20,7 +20,7 @@
 
 @layer utilities {
   .glass-effect {
-    @apply backdrop-blur-lg bg-white/75 dark:bg-gray-900/75;
+    @apply bg-white/75 dark:bg-gray-900/75 backdrop-blur-lg border border-white/80 dark:border-gray-700/80 shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30;
   }
 
   .logo-glow {
