@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Moon, Sun, Menu, ChevronDown, X, BarChart3 } from 'lucide-react';
+import { Moon, Sun, Menu, ChevronDown, X, BarChart3, Sparkles } from 'lucide-react';
 import { useStore } from '../store';
 
 export const Header = () => {
-  const { theme, toggleTheme } = useStore();
+  const theme = useStore((state) => state.theme);
+  const toggleTheme = useStore((state) => state.toggleTheme);
+  const neuralBackground = useStore((state) => state.neuralBackground);
+  const toggleNeuralBackground = useStore((state) => state.toggleNeuralBackground);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
@@ -38,7 +41,7 @@ export const Header = () => {
 
   return (
     <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 container mx-auto px-4">
-      <div className="rounded-[190px] backdrop-blur-sm bg-white/5 dark:bg-gray-800/50 border border-gray-200/10">
+      <div className="rounded-[190px] backdrop-blur-lg bg-white/75 dark:bg-gray-900/75 border border-white/80 dark:border-gray-700/80 shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30">
         <div className="flex items-center justify-between h-16 px-4">
           {/* Logo */}
           <div className="flex items-center gap-3">
@@ -94,6 +97,17 @@ export const Header = () => {
                 <Moon className="w-5 h-5" />
               )}
             </button>
+            <button
+              onClick={toggleNeuralBackground}
+              className={`p-2 rounded-lg transition-colors ${
+                neuralBackground 
+                  ? 'text-purple-500 hover:bg-purple-500/20' 
+                  : 'text-gray-400 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'
+              }`}
+              aria-label="Toggle neural background"
+            >
+              <Sparkles className="w-5 h-5" />
+            </button>
           </nav>
 
           {/* Mobile Menu Buttons */}
@@ -107,6 +121,17 @@ export const Header = () => {
               ) : (
                 <Moon className="w-5 h-5" />
               )}
+            </button>
+            <button
+              onClick={toggleNeuralBackground}
+              className={`p-2 rounded-lg transition-colors ${
+                neuralBackground 
+                  ? 'text-purple-500 hover:bg-purple-500/20' 
+                  : 'text-gray-400 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'
+              }`}
+              aria-label="Toggle neural background"
+            >
+              <Sparkles className="w-5 h-5" />
             </button>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -124,7 +149,7 @@ export const Header = () => {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="absolute top-full left-0 right-0 mt-4 mx-4">
-            <div className="rounded-2xl backdrop-blur-sm bg-white/5 dark:bg-gray-800/50 border border-gray-200/10 overflow-hidden">
+            <div className="rounded-2xl backdrop-blur-lg bg-white/75 dark:bg-gray-900/75 border border-white/80 dark:border-gray-700/80 shadow-lg shadow-gray-200/20 dark:shadow-gray-900/30 overflow-hidden">
               <div className="p-4 space-y-2">
                 {Object.entries(navigation).map(([key, section]) => (
                   <div key={key} className="space-y-2">
