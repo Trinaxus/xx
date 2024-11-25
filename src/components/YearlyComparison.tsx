@@ -49,7 +49,7 @@ export const YearlyComparison = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <CalendarRange className="w-6 h-6 text-purple-600" />
           <h2 className="text-xl font-display">Jahresvergleich {selectedYear}</h2>
@@ -58,7 +58,7 @@ export const YearlyComparison = () => {
         <select
           value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
-          className="px-4 py-2 rounded-lg border border-gray-700/50 bg-gray-900/50 dark:bg-gray-800/50 backdrop-blur-sm"
+          className="w-full sm:w-auto px-4 py-2 rounded-lg border border-gray-700/50 bg-gray-900/50 dark:bg-gray-800/50 backdrop-blur-sm"
         >
           {years.map(year => (
             <option key={year} value={year}>{year}</option>
@@ -66,9 +66,9 @@ export const YearlyComparison = () => {
         </select>
       </div>
       
-      <div className="h-[400px]">
+      <div className="h-[300px] sm:h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData}>
+          <LineChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <defs>
               <linearGradient id="yearlyGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
@@ -76,8 +76,17 @@ export const YearlyComparison = () => {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" strokeOpacity={0.5} />
-            <XAxis dataKey="name" stroke="#6b7280" />
-            <YAxis stroke="#6b7280" />
+            <XAxis 
+              dataKey="name" 
+              stroke="#6b7280"
+              tick={{ fontSize: 12 }}
+              interval="preserveStartEnd"
+            />
+            <YAxis 
+              stroke="#6b7280"
+              tick={{ fontSize: 12 }}
+              width={60}
+            />
             <Tooltip content={<CustomTooltip />} />
             <Line 
               type="monotone" 
@@ -91,7 +100,7 @@ export const YearlyComparison = () => {
         </ResponsiveContainer>
       </div>
       
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="p-4 rounded-xl bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/10">
           <p className="text-sm text-gray-500 dark:text-gray-400">Jahreseinnahmen</p>
           <p className="text-xl font-semibold text-emerald-600">

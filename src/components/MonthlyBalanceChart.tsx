@@ -138,47 +138,45 @@ export const MonthlyBalanceChart = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <CalendarRange className="w-6 h-6 text-purple-600" />
           <h2 className="text-xl font-display">Monatsverlauf</h2>
         </div>
         
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handlePreviousMonth}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <button
+            onClick={handlePreviousMonth}
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          </button>
+          
+          <div className="flex items-center gap-2 flex-1 sm:flex-auto justify-center">
+            <span className="text-lg font-medium min-w-[100px] text-center">{months[selectedMonth]}</span>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(Number(e.target.value))}
+              className="px-3 py-1 rounded-lg border border-gray-700/50 bg-gray-900/50 dark:bg-gray-800/50 backdrop-blur-sm"
             >
-              <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-            </button>
-            
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-medium">{months[selectedMonth]}</span>
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className="px-3 py-1 rounded-lg border border-gray-700/50 bg-gray-900/50 dark:bg-gray-800/50 backdrop-blur-sm"
-              >
-                {Array.from({ length: 5 }, (_, i) => currentDate.getFullYear() - i).map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              onClick={handleNextMonth}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-            </button>
+              {Array.from({ length: 5 }, (_, i) => currentDate.getFullYear() - i).map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
           </div>
+
+          <button
+            onClick={handleNextMonth}
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          </button>
         </div>
       </div>
       
-      <div className="h-[400px]">
+      <div className="h-[300px] sm:h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={dailyData}>
+          <LineChart data={dailyData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <defs>
               <linearGradient id="balanceGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
@@ -186,8 +184,17 @@ export const MonthlyBalanceChart = () => {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" strokeOpacity={0.5} />
-            <XAxis dataKey="name" stroke="#6b7280" />
-            <YAxis stroke="#6b7280" />
+            <XAxis 
+              dataKey="name" 
+              stroke="#6b7280"
+              tick={{ fontSize: 12 }}
+              interval="preserveStartEnd"
+            />
+            <YAxis 
+              stroke="#6b7280"
+              tick={{ fontSize: 12 }}
+              width={60}
+            />
             <Tooltip content={<CustomTooltip />} />
             <Line
               type="monotone"
@@ -215,7 +222,7 @@ export const MonthlyBalanceChart = () => {
         </ResponsiveContainer>
       </div>
       
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="p-4 rounded-xl bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/10">
           <p className="text-sm text-gray-500 dark:text-gray-400">Einnahmen</p>
           <p className="text-xl font-semibold text-emerald-600">€{monthlyStats.income.toFixed(2)}</p>
