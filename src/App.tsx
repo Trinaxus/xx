@@ -4,7 +4,6 @@ import { Dashboard } from './components/Dashboard';
 import { TransactionManager } from './components/TransactionManager';
 import { MonthlyTransactions } from './components/MonthlyTransactions';
 import { MonthlyComparison } from './components/MonthlyComparison';
-import { YearlyComparison } from './components/YearlyComparison';
 import { CategoryAnalysis } from './components/CategoryAnalysis';
 import { CSVImport } from './components/CSVImport';
 import { SavingsOverview } from './components/SavingsOverview';
@@ -36,9 +35,10 @@ function App() {
             </section>
           </div>
           
-          <section id="yearly">
+          {/* YearlyComparison ist bereits im Dashboard enthalten */}
+          {/* <section id="yearly">
             <YearlyComparison />
-          </section>
+          </section> */}
 
           <section id="monthly-transactions">
             {/* <MonthlyTransactions /> */}

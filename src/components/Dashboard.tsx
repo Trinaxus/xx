@@ -2,6 +2,8 @@ import React from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useStore } from '../store';
 import { AccountBalance } from './AccountBalance';
+import { MonthlyBalanceChart } from './MonthlyBalanceChart';
+import { YearlyComparison } from './YearlyComparison';
 
 export const Dashboard = () => {
   const { transactions } = useStore();
@@ -41,6 +43,16 @@ export const Dashboard = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* MonthlyBalanceChart */}
+      <div className="rounded-2xl bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/10 p-6">
+        <MonthlyBalanceChart />
+      </div>
+
+      {/* YearlyComparison */}
+      <div className="rounded-2xl bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/10 p-6">
+        <YearlyComparison />
       </div>
     </div>
   );
