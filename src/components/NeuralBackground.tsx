@@ -32,6 +32,19 @@ export const NeuralBackground: React.FC = () => {
     };
     resize();
 
+    // Calculate number of points based on screen size
+    const getPointCount = () => {
+      const area = window.innerWidth * window.innerHeight;
+      const baseCount = Math.min(60, Math.max(20, Math.floor(area / 25000)));
+      return baseCount;
+    };
+
+    // Calculate connection distance based on screen size
+    const getMaxDistance = () => {
+      const minDimension = Math.min(window.innerWidth, window.innerHeight);
+      return Math.min(250, Math.max(150, minDimension / 4));
+    };
+
     const colors = {
       pink: 'rgba(255, 20, 147, 0.6)',
       blue: 'rgba(0, 191, 255, 0.6)',
@@ -42,7 +55,7 @@ export const NeuralBackground: React.FC = () => {
     const colorKeys = Object.keys(colors) as (keyof typeof colors)[];
 
     const points: Point[] = [];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < getPointCount(); i++) {
       points.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -97,7 +110,7 @@ export const NeuralBackground: React.FC = () => {
             const dx = other.x - point.x;
             const dy = other.y - point.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            const maxDistance = 250;
+            const maxDistance = getMaxDistance();
 
             if (distance < maxDistance) {
               const midX = (point.x + other.x) / 2;
@@ -166,11 +179,57 @@ export const NeuralBackground: React.FC = () => {
       animationFrameId = requestAnimationFrame(animate);
     }
 
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', () => {
+      resize();
+      
+      // Update points count on resize
+      const newCount = getPointCount();
+      if (newCount < points.length) {
+        points.length = newCount; // Remove excess points
+      } else if (newCount > points.length) {
+        // Add new points
+        for (let i = points.length; i < newCount; i++) {
+          points.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 1.2,
+            vy: (Math.random() - 0.5) * 1.2,
+            color: colors[colorKeys[Math.floor(Math.random() * colorKeys.length)]],
+            size: 2 + Math.random() * 2,
+            pulsePhase: Math.random() * Math.PI * 2,
+            pulseSpeed: 0.03 + Math.random() * 0.02,
+            glowIntensity: 0.5 + Math.random() * 0.5
+          });
+        }
+      }
+    });
     animate();
 
     return () => {
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', () => {
+        resize();
+        
+        // Update points count on resize
+        const newCount = getPointCount();
+        if (newCount < points.length) {
+          points.length = newCount; // Remove excess points
+        } else if (newCount > points.length) {
+          // Add new points
+          for (let i = points.length; i < newCount; i++) {
+            points.push({
+              x: Math.random() * canvas.width,
+              y: Math.random() * canvas.height,
+              vx: (Math.random() - 0.5) * 1.2,
+              vy: (Math.random() - 0.5) * 1.2,
+              color: colors[colorKeys[Math.floor(Math.random() * colorKeys.length)]],
+              size: 2 + Math.random() * 2,
+              pulsePhase: Math.random() * Math.PI * 2,
+              pulseSpeed: 0.03 + Math.random() * 0.02,
+              glowIntensity: 0.5 + Math.random() * 0.5
+            });
+          }
+        }
+      });
       cancelAnimationFrame(animationFrameId);
     };
   }, [theme, neuralBackground]);
