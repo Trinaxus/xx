@@ -125,6 +125,43 @@ export const TransactionManager = () => {
 
   const formatMonthKey = (date: Date) => `${date.getFullYear()}-${String(date.getMonth()).padStart(2, '0')}`;
 
+  const handleDelete = (transactionId: string) => {
+    const confirmDelete = window.confirm("Möchten Sie diese Transaktion wirklich löschen?");
+    if (confirmDelete) {
+      deleteTransaction(transactionId);
+    }
+  };
+
+  // Erstelle ein Array für die Monate mit Abkürzungen
+  const months = [
+    "Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
+    "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"
+  ];
+
+  // Berechne die monatlichen Statistiken
+  const monthlyStats = Array.from({ length: 12 }, (_, i) => ({
+    name: months[i],
+    Einnahmen: 0,
+    Ausgaben: 0,
+    Bilanz: 0,
+  }));
+
+  transactions.forEach(transaction => {
+    const monthIndex = new Date(transaction.date).getMonth();
+    if (!transaction.isPending) { // Nur ausgeführte Transaktionen berücksichtigen
+      if (transaction.type === 'income') {
+        monthlyStats[monthIndex].Einnahmen += transaction.amount;
+      } else {
+        monthlyStats[monthIndex].Ausgaben += transaction.amount;
+      }
+    }
+  });
+
+  // Berechne die Bilanz für jeden Monat
+  monthlyStats.forEach(month => {
+    month.Bilanz = month.Einnahmen - month.Ausgaben;
+  });
+
   return (
     <div className="space-y-6">
       {/* Controls Bar */}
@@ -306,7 +343,7 @@ export const TransactionManager = () => {
                                   <Edit2 className="w-4 h-4" />
                                 </button>
                                 <button
-                                  onClick={() => deleteTransaction(transaction.id)}
+                                  onClick={() => handleDelete(transaction.id)}
                                   className="p-1 hover:text-rose-700 dark:hover:text-rose-400 transition-colors"
                                 >
                                   <Trash2 className="w-4 h-4" />

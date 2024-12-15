@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { Calendar, ArrowLeft, ArrowRight, Plus, TrendingUp, TrendingDown, PiggyBank, ChevronDown, ChevronUp, Wallet } from 'lucide-react';
 import { useStore } from '../store';
@@ -185,3 +186,73 @@ export const MonthlyTransactions = () => {
     </div>
   );
 };
+=======
+import React from 'react';
+import { useStore } from '../store';
+
+export const MonthlyTransactions = () => {
+  const { transactions } = useStore();
+
+  // Erstelle ein Array für die Monate mit Abkürzungen
+  const months = [
+    "Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
+    "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"
+  ];
+
+  // Erstelle ein Array für die monatlichen Statistiken
+  const monthData = Array.from({ length: 12 }, (_, i) => ({
+    name: months[i],
+    Einnahmen: 0,
+    Ausgaben: 0,
+    Bilanz: 0, // Bilanz
+  }));
+
+  // Berechne Einnahmen, Ausgaben und Bilanz für jeden Monat nur für bestätigte Transaktionen
+  transactions.forEach(transaction => {
+    const monthIndex = new Date(transaction.date).getMonth();
+    if (!transaction.isPending) { // Nur ausgeführte Transaktionen berücksichtigen
+      if (transaction.type === 'income') {
+        monthData[monthIndex].Einnahmen += transaction.amount; // Einnahmen zählen
+      } else {
+        monthData[monthIndex].Ausgaben += transaction.amount; // Ausgaben abziehen
+      }
+    }
+  });
+
+  // Berechne die Bilanz für jeden Monat
+  monthData.forEach(month => {
+    month.Bilanz = month.Einnahmen - month.Ausgaben;
+  });
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-xl font-display">Monatliche Transaktionen</h2>
+      
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monat</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Einnahmen</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ausgaben</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bilanz</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {monthData.map((month, index) => (
+              <tr key={index}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{month.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-emerald-600">€{month.Einnahmen.toFixed(2)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-rose-600">€{month.Ausgaben.toFixed(2)}</td>
+                <td className={`px-6 py-4 whitespace-nowrap text-sm ${month.Bilanz < 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                  €{month.Bilanz.toFixed(2)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+>>>>>>> fd8a8498 (Initial commitee)

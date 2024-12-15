@@ -6,13 +6,17 @@ import { formatMonth } from '../utils/dateUtils';
 
 export const MonthlyComparison = () => {
   const { getMonthlyAnalysis } = useStore();
-  const lastSixMonths = getMonthlyAnalysis(6);
+  const lastSixMonths = getMonthlyAnalysis(12);
+
+  const monthNames = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]; // Monatsnamen
 
   const chartData = lastSixMonths.map(analysis => ({
-    name: formatMonth(analysis.month, analysis.year),
-    Einnahmen: Number(analysis.income.toFixed(2)),
-    Ausgaben: Number(analysis.expenses.toFixed(2)),
-    Bilanz: Number(analysis.balance.toFixed(2))
+    month: analysis.month, // Monat als Zahl (0-11)
+    year: analysis.year,
+    Bilanz: Number(analysis.balance.toFixed(2)) // Nur die Bilanz behalten
+  })).sort((a, b) => a.month - b.month).map(analysis => ({
+    name: monthNames[analysis.month], // Monat als Wort
+    Bilanz: analysis.Bilanz // Nur die Bilanz ausgeben
   }));
 
   // Angepasstes Tooltip-Design
@@ -67,16 +71,6 @@ export const MonthlyComparison = () => {
                 paddingTop: '20px',
                 opacity: 0.8
               }} 
-            />
-            <Bar 
-              dataKey="Einnahmen" 
-              fill="#10b981" 
-              radius={[4, 4, 0, 0]}
-            />
-            <Bar 
-              dataKey="Ausgaben" 
-              fill="#ef4444" 
-              radius={[4, 4, 0, 0]}
             />
             <Bar 
               dataKey="Bilanz" 
